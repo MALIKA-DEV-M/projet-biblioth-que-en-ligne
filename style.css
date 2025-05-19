@@ -1,0 +1,116 @@
+/* Style g�n�ral du corps */
+@charset "UTF-8";
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    background-image: url("/static/fond-bibliotheque.jpg");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: transparent; /* ✅ remplace la couleur verte */
+}
+
+
+
+/* Conteneur principal centr� */
+.container {
+    background-color: #1c1c1c; /* Noir foncé */
+    padding: 30px;
+    margin-top: 40px;
+    width: 90%;
+    max-width: 700px;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    color: #ffffff; /* Texte blanc */
+}
+
+
+/* Titres */
+h1, h2 {
+    text-align: center;
+    color: #2e7d32; /* Vert fonc� */
+}
+
+/* Lien */
+a {
+    display: block;
+    text-align: center;
+    margin: 20px 0;
+    color: #1b5e20;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Formulaires */
+form {
+    margin-top: 20px;
+}
+
+label {
+    display: block;
+    margin-top: 15px;
+    font-weight: 600;
+    color: #333;
+}
+
+input, select {
+    width: 100%;
+    padding: 12px;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+/* Boutons personnalis�s */
+button {
+    background-color: #43a047;
+    color: white;
+    border: none;
+    padding: 14px 20px;
+    border-radius: 6px;
+    margin-top: 20px;
+    font-size: 18px;
+    cursor: pointer;
+    width: 100%;
+}
+
+    button:hover {
+        background-color: #388e3c;
+    }
+
+/* Chat IA */
+#chat-box {
+    border: 1px solid #ddd;
+    background-color: #f9f9f9;
+    padding: 15px;
+    border-radius: 8px;
+    height: 200px;
+    overflow-y: auto;
+    margin-bottom: 15px;
+}
+
+.user {
+    text-align: right;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.bot {
+    text-align: left;
+    color: #2e7d32;
+    margin-bottom: 10px;
+}
+
+.chat-container {
+    display: flex;
+    gap: 10px;
+}
