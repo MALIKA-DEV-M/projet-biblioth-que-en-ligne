@@ -1,22 +1,26 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site de Recommandation de Livres</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<h1>Bienvenue sur le site de recommandation de livres !</h1>
+<body>
+    <div class="container">
+        <h1>Bienvenue sur le site de recommandation de livres !</h1>
 
-<h2>💬 Discute avec l'IA</h2>
+        <h2> Discute avec l'IA</h2>
 
-<div id="chat-box"></div>
+        
 
-<input type="text" id="user-input" placeholder="Pose une question sur un livre..." style="width: 80%;" />
-<button onclick="envoyerMessage()">Envoyer</button>
+        <div class="chat-container">
+            <input type="text" id="user-input" placeholder="Pose une question sur un livre..." />
+            <button onclick="envoyerMessage()">Envoyer</button>
+        </div>
+    </div>
 
-<script>
+    <script>
         async function envoyerMessage() {
             const input = document.getElementById("user-input");
             const message = input.value.trim();
@@ -36,8 +40,6 @@
             chatBox.scrollTop = chatBox.scrollHeight;
             input.value = "";
         }
-</script>
-
+    </script>
 </body>
-
 </html>
