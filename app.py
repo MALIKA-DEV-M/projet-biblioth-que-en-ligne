@@ -101,4 +101,3 @@ def chat():
         reponse = reponse.split("[/INST]")[-1].strip()
 
     return jsonify({"reponse": reponse})
-
