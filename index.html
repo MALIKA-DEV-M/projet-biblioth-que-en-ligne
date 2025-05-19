@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Site de Recommandation de Livres</title>
+</head>
+<h1>Bienvenue sur le site de recommandation de livres !</h1>
+<p>Choisissez un genre ou un auteur pour obtenir des recommandations.</p>
+<a href="/livres">Voir les livres</a>
+
+<form action="/recommandation" method="GET">
+    <label for="genre">Choisir un genre:</label>
+    <select name="genre" id="genre">
+        <option value="Classique">Classique</option>
+        <option value="Dystopie">Dystopie</option>
+    </select>
+    <button type="submit">Recommander</button>
+</form>
+
+<form action="/find" method="GET">
+    <label for="nomlivre">Nom du livre :</label>
+    <input type="text" id="nomlivre" name="nomlivre" placeholder="Ex: Le Petit Prince">
+
+    <br>
+
+    <label for="auteur">Auteur :</label>
+    <input type="text" id="auteur" name="auteur" placeholder="Ex: Antoine de Saint-Exupéry">
+
+    <br>
+
+    <label for="genre">Genre :</label>
+    <input type="text" id="genre" name="genre" placeholder="Ex: Fantastique, Science-fiction">
+
+    <br>
+
+    <label for="edition">éditeur :</label>
+    <input type="text" id="edition" name="edition" placeholder="Ex: Gallimard">
+
+    <br><br>
+
+    <button type="submit">Rechercher</button>
+</form>
+<hr>
+<h2>💬 Discute avec l'IA</h2>
+
+<div id="chat-box"></div>
+
+<input type="text" id="user-input" placeholder="Pose une question sur un livre..." style="width: 80%;" />
+<button onclick="envoyerMessage()">Envoyer</button>
+
+<script>
+        async function envoyerMessage() {
+            const input = document.getElementById("user-input");
+            const message = input.value.trim();
+            if (!message) return;
+
+            const chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML += `<div class="user"><strong>Vous :</strong> ${message}</div>`;
+
+            const response = await fetch("/chat", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message: message })
+            });
+
+            const data = await response.json();
+            chatBox.innerHTML += `<div class="bot"><strong>IA :</strong> ${data.reponse}</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+            input.value = "";
+        }
+</script>
+
+</body>
+
+</html>
