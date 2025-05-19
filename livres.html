@@ -1,0 +1,32 @@
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Livres recommandés</title>
+</head>
+<body>
+    <h1>Résultats</h1>
+
+    {% if reponse %}
+    <h2>Réponse de l'IA :</h2>
+    <p style="white-space: pre-line;">{{ reponse }}</p>
+
+    {% elif livres %}
+    <h2>Liste des livres :</h2>
+    <ul>
+        {% for livre in livres %}
+        <li>
+            <strong>{{ livre.titre }}</strong> par {{ livre.auteur }}<br>
+            Genre: {{ livre.genre }}<br>
+            Synopsis: {{ livre.synopsis }}
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p>Aucun résultat à afficher.</p>
+    {% endif %}
+
+    <br>
+    <a href="/">? Retour à l'accueil</a>
+</body>
+</html>
