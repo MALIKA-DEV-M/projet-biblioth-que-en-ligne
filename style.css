@@ -1,6 +1,6 @@
-/* Style g�n�ral du corps */
 @charset "UTF-8";
 
+/* Corps */
 body {
     font-family: 'Segoe UI', sans-serif;
     margin: 0;
@@ -15,28 +15,26 @@ body {
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    background-color: transparent; /* ✅ remplace la couleur verte */
+    background-color: transparent;
+    color: #5D4037; /* ✅ Texte général en marron */
 }
 
-
-
-/* Conteneur principal centr� */
+/* Conteneur principal */
 .container {
-    background-color: #1c1c1c; /* Noir foncé */
+    background-color: #E6D8B6; /* ✅ Beige légèrement plus foncé */
     padding: 30px;
     margin-top: 40px;
     width: 90%;
     max-width: 700px;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-    color: #ffffff; /* Texte blanc */
+    color: #5D4037;
 }
-
 
 /* Titres */
 h1, h2 {
     text-align: center;
-    color: #2e7d32; /* Vert fonc� */
+    color: #5D4037; /* ✅ Marron */
 }
 
 /* Lien */
@@ -44,7 +42,7 @@ a {
     display: block;
     text-align: center;
     margin: 20px 0;
-    color: #1b5e20;
+    color: #5D4037; /* ✅ Marron */
     text-decoration: none;
     font-weight: bold;
 }
@@ -58,7 +56,7 @@ label {
     display: block;
     margin-top: 15px;
     font-weight: 600;
-    color: #333;
+    color: #5D4037; /* ✅ Marron */
 }
 
 input, select {
@@ -68,11 +66,12 @@ input, select {
     border: 1px solid #ccc;
     border-radius: 6px;
     font-size: 16px;
+    color: #5D4037; /* ✅ Texte saisi en marron */
 }
 
-/* Boutons personnalis�s */
+/* Boutons */
 button {
-    background-color: #43a047;
+    background-color: #8D6E63; /* ✅ Marron doux */
     color: white;
     border: none;
     padding: 14px 20px;
@@ -84,29 +83,30 @@ button {
 }
 
     button:hover {
-        background-color: #388e3c;
+        background-color: #6D4C41; /* Marron plus foncé */
     }
 
 /* Chat IA */
 #chat-box {
-    border: 1px solid #ddd;
-    background-color: #f9f9f9;
+    border: 1px solid #ccc;
+    background-color: #fff8f0; /* Beige très clair */
     padding: 15px;
     border-radius: 8px;
     height: 200px;
     overflow-y: auto;
     margin-bottom: 15px;
+    color: #5D4037; /* ✅ Texte du chat en marron */
 }
 
 .user {
     text-align: right;
-    color: #333;
+    color: #5D4037;
     margin-bottom: 10px;
 }
 
 .bot {
     text-align: left;
-    color: #2e7d32;
+    color: #5D4037;
     margin-bottom: 10px;
 }
 
@@ -114,3 +114,4 @@ button {
     display: flex;
     gap: 10px;
 }
+
