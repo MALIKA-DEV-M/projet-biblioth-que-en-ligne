@@ -5,6 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site de Recommandation de Livres</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        #chat-box {
+            border: 1px solid #ccc;
+            padding: 1em;
+            height: auto;
+            min-height: 150px;
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 1em;
+            background-color: #f9f9f9;
+        }
+
+        .user {
+            margin-bottom: 0.5em;
+            color: #2c3e50;
+        }
+
+        .bot {
+            margin-bottom: 1em;
+            color: #34495e;
+        }
+
+        .prompt-info {
+            font-size: 0.85em;
+            color: #888;
+            margin-top: -0.5em;
+            margin-bottom: 1em;
+        }
+
+        .reset-btn {
+            margin-left: 0.5em;
+            background-color: #02414A;
+            color: white;
+            border: none;
+            padding: 0.5em 1em;
+            cursor: pointer;
+        }
+
+            .reset-btn:hover {
+                background-color: #c0392b;
+            }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -22,8 +64,8 @@
         </div>
 
         <!-- Petit texte explicatif -->
-        <p style="font-size: 0.85em; color: #888; text-align: center;">
-            💡 Utilisez “Réinitialiser” pour effacer l'historique de la dernière question.
+        <p class="prompt-info">
+            💡 Utilisez “Réinitialiser” pour effacer l'historique de la dernière question. Le prompt est automatiquement reformulé pour améliorer les résultats.
         </p>
     </div>
 
@@ -44,7 +86,15 @@
                 });
 
                 const data = await response.json();
+
+                // Affiche la réponse
                 chatBox.innerHTML += `<div class="bot"><strong>IA :</strong> ${data.reponse}</div>`;
+
+                // Si le prompt amélioré est présent dans la réponse
+                if (data.prompt_ameliore) {
+                    chatBox.innerHTML += `<div class="prompt-info"><em>🔧 Prompt reformulé :</em> ${data.prompt_ameliore}</div>`;
+                }
+
                 chatBox.scrollTop = chatBox.scrollHeight;
                 input.value = "";
             } catch (error) {
@@ -67,3 +117,6 @@
     </script>
 </body>
 </html>
+
+    
+     
