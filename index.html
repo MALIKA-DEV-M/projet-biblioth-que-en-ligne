@@ -9,15 +9,22 @@
 <body>
     <div class="container">
         <h1>Bienvenue sur le site de recommandation de livres !</h1>
+        <h2>Discute avec l'IA</h2>
 
-        <h2> Discute avec l'IA</h2>
+        <!-- Boîte pour afficher les messages -->
+        <div id="chat-box"></div>
 
-        
-
+        <!-- Zone de saisie + bouton envoyer + reset -->
         <div class="chat-container">
             <input type="text" id="user-input" placeholder="Pose une question sur un livre..." />
             <button onclick="envoyerMessage()">Envoyer</button>
+            <button onclick="resetMemoire()" class="reset-btn">🧹 Réinitialiser</button>
         </div>
+
+        <!-- Petit texte explicatif -->
+        <p style="font-size: 0.85em; color: #888; text-align: center;">
+            💡 Utilisez “Réinitialiser” pour effacer l'historique de la dernière question.
+        </p>
     </div>
 
     <script>
@@ -29,16 +36,33 @@
             const chatBox = document.getElementById("chat-box");
             chatBox.innerHTML += `<div class="user"><strong>Vous :</strong> ${message}</div>`;
 
+            try {
+                const response = await fetch("/chat", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ message })
+                });
+
+                const data = await response.json();
+                chatBox.innerHTML += `<div class="bot"><strong>IA :</strong> ${data.reponse}</div>`;
+                chatBox.scrollTop = chatBox.scrollHeight;
+                input.value = "";
+            } catch (error) {
+                chatBox.innerHTML += `<div class="bot">❌ Erreur de communication avec le serveur.</div>`;
+            }
+        }
+
+        async function resetMemoire() {
+            const chatBox = document.getElementById("chat-box");
             const response = await fetch("/chat", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ message: message })
+                body: JSON.stringify({ message: "reset" })
             });
 
             const data = await response.json();
             chatBox.innerHTML += `<div class="bot"><strong>IA :</strong> ${data.reponse}</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
-            input.value = "";
         }
     </script>
 </body>
