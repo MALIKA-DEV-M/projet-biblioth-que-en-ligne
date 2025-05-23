@@ -87,7 +87,7 @@ def appeler_huggingface(prompt):
     except Exception as e:
         return f"Erreur Hugging Face : {str(e)}"
 
-# === AGENT POUR AMÉLIORER LE PROMPT (sans enrichissement manuel) ===
+# === AMÉLIORATION DU PROMPT ===
 def ameliorer_prompt(prompt_utilisateur):
     url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
     headers = {
@@ -95,29 +95,30 @@ def ameliorer_prompt(prompt_utilisateur):
         "Content-Type": "application/json"
     }
 
-    meta_prompt = f"""
-Tu es un expert en reformulation de requêtes de recherche littéraire destinées à des bases de données comme Google Books ou OpenLibrary.
+    prompt_systeme = f"""
+Tu es un expert en littérature.
 
-Ton objectif est d'améliorer ce prompt pour qu'il soit :
-1. Plus spécifique,
-2. Plus littéraire,
-3. Plus contextuel.
+L'utilisateur cherche des recommandations de livres avec les critères suivants :
+"{prompt_utilisateur}"
 
-Ajoute des références connues (auteurs, titres, lieux, époques, styles) **si elles sont pertinentes**.
+Tu dois transformer cette demande en une requête **optimisée et ciblée** pour une recherche littéraire. La requête reformulée doit inclure clairement :
+- Le **genre** (ex: roman fantastique, policier…)
+- Le **cadre géographique** (ex: Moyen-Orient, Égypte…)
+- L’**époque** (ex: années 30, époque victorienne…)
+- Le **type de personnage** (ex: jeune sorcier, femme détective…)
+- La **caractéristique de l’auteur·e** si précisée (ex: écrit par une femme)
 
-Exemples :
-- "livre avec un sorcier" → "roman de fantasy pour jeunes adultes comme Harry Potter de J.K. Rowling"
-- "roman policier sur le Nil" → "polar historique en Égypte dans le style d’Agatha Christie"
+Règle d’or : tous les critères doivent être respectés dans la reformulation. Si une information est vague ou manquante, **ne l'invente pas**.
 
-Voici le prompt utilisateur : "{prompt_utilisateur}"
+Donne uniquement la phrase reformulée. Ne propose pas d'essai, de livre documentaire, de magazine ou d'article. Seulement des **romans**.
 
-Donne uniquement le prompt reformulé, sans introduction.
-""".strip()
+Si aucun roman exact ne correspond à tous les critères, dis : "Aucune correspondance fiable trouvée."
+    """
 
     payload = {
-        "inputs": f"[INST] {meta_prompt} [/INST]",
+        "inputs": f"[INST] {prompt_systeme} [/INST]",
         "parameters": {
-            "max_new_tokens": 150,
+            "max_new_tokens": 200,
             "temperature": 0.4
         }
     }
@@ -151,7 +152,7 @@ def recommandation():
     livres_recommandes = [livre for livre in livres_data if livre['genre'] == genre]
     return render_template('livres.html', livres=livres_recommandes)
 
-# === ROUTE DE RECHERCHE DE LIVRES (Chat avec reformulation automatique) ===
+# === ROUTE DE CHAT ===
 dernier_prompt = None
 
 @app.route('/chat', methods=['POST'])
@@ -169,11 +170,12 @@ def chat():
     message_complet = f"{dernier_prompt}. {user_message}" if dernier_prompt else user_message
     dernier_prompt = user_message
 
-    # 🧠 Reformulation par LLM directement (sans enrichissement manuel)
     prompt_ameliore = ameliorer_prompt(message_complet)
-
-    # 📚 Recherche
     livres = chercher_dans_les_deux(prompt_ameliore)
+
+    # 🧹 Filtrage des résultats vagues ou hors sujet
+    mots_cles = ["roman", "sorcier", "magie", "fantastique", "école"]
+    livres = [livre for livre in livres if any(mot in livre['description'].lower() for mot in mots_cles)]
 
     if livres:
         reponse = f"<em>Recherche basée sur le prompt amélioré : <strong>{prompt_ameliore}</strong></em><br><br>"
