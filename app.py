@@ -5,13 +5,14 @@ import os
 import requests
 import webbrowser
 
+#initialise l'application Flask en précisant où se trouve les templates HTML
 app = Flask(__name__, template_folder=os.path.join(os.path.dirname(__file__), 'templates'))
 
-# === CONFIGURATION ===
+# configuration des clés API
 GOOGLE_BOOKS_API_KEY = "AIzaSyBl03kApQIJq24ktCdQ8R1Aj_JSiO7mDKs"
 HUGGINGFACE_TOKEN = "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"
 
-# === GOOGLE BOOKS ===
+# permet de faire une recherche dans l'API Google Books
 def rechercher_livre_google(termes):
     url = "https://www.googleapis.com/books/v1/volumes"
     params = {
@@ -37,7 +38,7 @@ def rechercher_livre_google(termes):
         return results
     return []
 
-# === OPEN LIBRARY ===
+# permet de faire une recherche dans l'API OpenLibrary
 def rechercher_livre_openlibrary(termes):
     url = "https://openlibrary.org/search.json"
     params = {"q": termes, "language": "fre", "limit": 3}
@@ -55,7 +56,7 @@ def rechercher_livre_openlibrary(termes):
             })
     return livres
 
-# === COMBINE LES DEUX SOURCES ===
+# Combine les deux sources, commence par Google Books s'il n'y a pas il fait avec OpenLibrary
 def chercher_dans_les_deux(termes):
     resultats = rechercher_livre_google(termes)
     if len(resultats) < 3:
@@ -63,7 +64,7 @@ def chercher_dans_les_deux(termes):
         resultats.extend(autres)
     return resultats
 
-# === HUGGING FACE (LLM) ===
+# Envoie un prompt à un modèle Mistral hébergé sur HuggingFace.
 def appeler_huggingface(prompt):
     url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
     headers = {
@@ -87,7 +88,7 @@ def appeler_huggingface(prompt):
     except Exception as e:
         return f"Erreur Hugging Face : {str(e)}"
 
-# === AMÉLIORATION DU PROMPT ===
+# Envoie un prompt structuré à l’IA pour le reformuler intelligemment selon des critères littéraires (genre, lieu, époque…)
 def ameliorer_prompt(prompt_utilisateur):
     url = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.1"
     headers = {
@@ -133,17 +134,19 @@ Si aucun roman exact ne correspond à tous les critères, dis : "Aucune correspo
     except Exception:
         return prompt_utilisateur
 
-# === ROUTES PRINCIPALES ===
+# affiche la page d'accueil index.html
 @app.route('/')
 def home():
     return render_template('index.html')
 
+# Affiche tous les livres du JSON stat
 @app.route('/livres')
 def livres():
     with open('static/livres.json', 'r', encoding='utf-8-sig') as f:
         livres_data = json.load(f)
     return render_template('livres.html', livres=livres_data)
 
+# Récupère les livres correspondant à un genre donné dans le fichier JSON.
 @app.route('/recommandation')
 def recommandation():
     genre = request.args.get('genre')
@@ -152,7 +155,7 @@ def recommandation():
     livres_recommandes = [livre for livre in livres_data if livre['genre'] == genre]
     return render_template('livres.html', livres=livres_recommandes)
 
-# === ROUTE DE CHAT ===
+# Fonction principale de dialogue : gère les resets, améliore le prompt, recherche les livres, filtre les résultats par mots-clés pertinents 
 dernier_prompt = None
 
 @app.route('/chat', methods=['POST'])
@@ -192,7 +195,7 @@ def chat():
         "prompt_ameliore": prompt_ameliore
     })
 
-# === ROUTE POUR IA LITTÉRAIRE ===
+# Permet d’interroger directement l’IA avec reformulation, mais sans recherche de livre
 @app.route('/ia', methods=['POST'])
 def ia():
     question = request.json.get("message", "")
@@ -207,7 +210,7 @@ def ia():
         "prompt_ameliore": prompt_ameliore
     })
 
-# === RECHERCHE PERSONNALISÉE ===
+# Recherche personnalisée, construit une requête à partir de plusieurs champs utilisateur (titre, auteur, etc.) et interroge Google Books uniquement
 @app.route('/find')
 def find():
     nom_livre = request.args.get('nomlivre')
@@ -222,7 +225,7 @@ def find():
     livres = rechercher_livre_google(termes)
     return render_template('livres.html', livres=livres)
 
-# === LANCEMENT SERVEUR ===
+# Ouvre automatiquement l'interface dans le navigateur au démarrage
 if __name__ == '__main__':
     webbrowser.open("http://127.0.0.1:5000")
     app.run(debug=True)
