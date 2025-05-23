@@ -1,32 +1,59 @@
 <html lang="fr">
+<!-- Déclare que le document est en français -->
 <head>
     <meta charset="UTF-8">
+    <!-- Définit l'encodage des caractères en UTF-8 (pour les accents, etc.) -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Règle l'affichage pour s'adapter aux écrans mobiles -->
+
     <title>Livres recommandés</title>
+    <!-- Titre affiché dans l’onglet du navigateur -->
 </head>
+
 <body>
     <h1>Résultats</h1>
+    <!-- Titre principal de la page -->
 
     {% if reponse %}
+    <!-- Si une réponse textuelle de l'IA est disponible -->
+
     <h2>Réponse de l'IA :</h2>
     <p style="white-space: pre-line;">{{ reponse }}</p>
+    <!-- Affiche le texte de la réponse avec les sauts de ligne conservés -->
 
     {% elif livres %}
+    <!-- Sinon, si une liste de livres est disponible -->
+
     <h2>Liste des livres :</h2>
     <ul>
         {% for livre in livres %}
+        <!-- Boucle sur chaque livre de la liste -->
+
         <li>
             <strong>{{ livre.titre }}</strong> par {{ livre.auteur }}<br>
+            <!-- Affiche le titre et l’auteur du livre -->
+
             Genre: {{ livre.genre }}<br>
+            <!-- Affiche le genre -->
+
             Synopsis: {{ livre.synopsis }}
+            <!-- Affiche le résumé du livre -->
         </li>
+
         {% endfor %}
+        <!-- Fin de la boucle -->
+
     </ul>
+
     {% else %}
+    <!-- Si ni réponse, ni livres : on affiche un message par défaut -->
+
     <p>Aucun résultat à afficher.</p>
     {% endif %}
 
     <br>
     <a href="/">? Retour à l'accueil</a>
+    <!-- Lien vers la page d’accueil -->
 </body>
 </html>
