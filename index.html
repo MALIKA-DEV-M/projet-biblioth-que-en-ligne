@@ -1,11 +1,24 @@
 <!DOCTYPE html>
+<!-- Déclare que c'est un document HTML5 -->
 <html lang="fr">
+<!-- Spécifie que la langue principale du document est le français -->
+
 <head>
     <meta charset="UTF-8">
+    <!-- Encodage des caractères en UTF-8 pour gérer les accents et caractères spéciaux -->
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Règle d’affichage responsive sur les appareils mobiles -->
+
     <title>Site de Recommandation de Livres</title>
+    <!-- Titre affiché dans l’onglet du navigateur -->
+
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- Inclusion du fichier CSS externe situé dans le dossier "static" de Flask -->
+
     <style>
+        /* Styles locaux à cette page (CSS en ligne) */
+
         #chat-box {
             border: 1px solid #ccc;
             padding: 1em;
@@ -36,9 +49,9 @@
             cursor: pointer;
         }
 
-            .reset-btn:hover {
-                background-color: #c0392b;
-            }
+        .reset-btn:hover {
+            background-color: #c0392b;
+        }
 
         .reset-hint {
             margin-top: 25px;
@@ -53,37 +66,50 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
+        <!-- Conteneur principal de la page -->
+
         <h1>Bienvenue!</h1>
         <h2>Discute avec Booky</h2>
 
-        <!-- Boîte pour afficher les messages -->
+        <!-- Zone qui affiche les messages utilisateur et IA -->
         <div id="chat-box"></div>
 
-        <!-- Zone de saisie + bouton envoyer + reset -->
+        <!-- Saisie utilisateur et boutons -->
         <div class="chat-container">
             <input type="text" id="user-input" placeholder="Pose une question sur un livre..." />
+            <!-- Champ texte pour taper une question -->
+
             <button onclick="envoyerMessage()">Envoyer</button>
+            <!-- Envoie la question à l’IA -->
+
             <button onclick="resetMemoire()" class="reset-btn">🧹 Réinitialiser</button>
+            <!-- Efface la mémoire de l'IA pour repartir de zéro -->
         </div>
 
-        <!-- Ligne explicative stylisée -->
+        <!-- Petit paragraphe explicatif -->
         <p class="reset-hint">
-            💡 Utilisez “Réinitialiser” pour effacer l'historique de la dernière question. Le prompt est automatiquement reformulé pour améliorer les résultats.
+            💡 Utilisez “Réinitialiser” pour effacer l'historique de la dernière question.
+            Le prompt est automatiquement reformulé pour améliorer les résultats.
         </p>
     </div>
 
+    <!-- Scripts JavaScript pour le fonctionnement du chat -->
     <script>
         async function envoyerMessage() {
+            // Récupère le texte entré par l'utilisateur
             const input = document.getElementById("user-input");
             const message = input.value.trim();
             if (!message) return;
 
             const chatBox = document.getElementById("chat-box");
+            // Affiche le message de l'utilisateur dans le chat
             chatBox.innerHTML += `<div class="user"><strong>Vous :</strong> ${message}</div>`;
 
             try {
+                // Envoie la requête POST au serveur Flask
                 const response = await fetch("/chat", {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
@@ -92,22 +118,25 @@
 
                 const data = await response.json();
 
-                // Affiche la réponse
+                // Affiche la réponse de l'IA
                 chatBox.innerHTML += `<div class="bot"><strong>IA :</strong> ${data.reponse}</div>`;
 
-                // Si le prompt amélioré est présent dans la réponse
+                // Affiche le prompt reformulé (si présent)
                 if (data.prompt_ameliore) {
                     chatBox.innerHTML += `<div class="reset-hint"><em>🔧 Prompt reformulé :</em> ${data.prompt_ameliore}</div>`;
                 }
 
+                // Fait défiler automatiquement vers le bas
                 chatBox.scrollTop = chatBox.scrollHeight;
                 input.value = "";
             } catch (error) {
+                // Affiche un message d'erreur si la requête échoue
                 chatBox.innerHTML += `<div class="bot">❌ Erreur de communication avec le serveur.</div>`;
             }
         }
 
         async function resetMemoire() {
+            // Envoie un message spécial pour réinitialiser le contexte du chat
             const chatBox = document.getElementById("chat-box");
             const response = await fetch("/chat", {
                 method: "POST",
@@ -116,6 +145,7 @@
             });
 
             const data = await response.json();
+            // Affiche la réponse de confirmation
             chatBox.innerHTML += `<div class="bot"><strong>IA :</strong> ${data.reponse}</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
         }
