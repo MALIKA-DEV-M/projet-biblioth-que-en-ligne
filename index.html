@@ -27,13 +27,6 @@
             color: #34495e;
         }
 
-        .prompt-info {
-            font-size: 0.85em;
-            color: #888;
-            margin-top: -0.5em;
-            margin-bottom: 1em;
-        }
-
         .reset-btn {
             margin-left: 0.5em;
             background-color: #02414A;
@@ -46,12 +39,24 @@
             .reset-btn:hover {
                 background-color: #c0392b;
             }
+
+        .reset-hint {
+            margin-top: 25px;
+            font-size: 15px;
+            color: #5D4037;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 10px 15px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            line-height: 1.5;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Bienvenue sur le site de recommandation de livres !</h1>
-        <h2>Discute avec l'IA</h2>
+        <h1>Bienvenue!</h1>
+        <h2>Discute avec Booky</h2>
 
         <!-- Boîte pour afficher les messages -->
         <div id="chat-box"></div>
@@ -63,8 +68,8 @@
             <button onclick="resetMemoire()" class="reset-btn">🧹 Réinitialiser</button>
         </div>
 
-        <!-- Petit texte explicatif -->
-        <p class="prompt-info">
+        <!-- Ligne explicative stylisée -->
+        <p class="reset-hint">
             💡 Utilisez “Réinitialiser” pour effacer l'historique de la dernière question. Le prompt est automatiquement reformulé pour améliorer les résultats.
         </p>
     </div>
@@ -92,7 +97,7 @@
 
                 // Si le prompt amélioré est présent dans la réponse
                 if (data.prompt_ameliore) {
-                    chatBox.innerHTML += `<div class="prompt-info"><em>🔧 Prompt reformulé :</em> ${data.prompt_ameliore}</div>`;
+                    chatBox.innerHTML += `<div class="reset-hint"><em>🔧 Prompt reformulé :</em> ${data.prompt_ameliore}</div>`;
                 }
 
                 chatBox.scrollTop = chatBox.scrollHeight;
